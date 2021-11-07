@@ -13,7 +13,7 @@ export default function registerAPI() {
 
     const id = request.params.id;
 
-    getSchool(id, (school) => {      
+    getSchool(id, (school) => {
       response.send(school)
     });
 
@@ -39,14 +39,14 @@ export default function registerAPI() {
     });
   });
 
-    // update school details
-    app.put("/school/update", (req, res) => {
+  // update school details
+  app.put("/school/update", (req, res) => {
 
-      const body = req.body;
-  
-      updateSchool(body, (result) => {
-        res.send(result ? { message: "school updated successfully" } : { message: "Failed to update school" });
-      });
+    const body = req.body;
+
+    updateSchool(body, (result) => {
+      res.send(result ? { message: "school updated successfully" } : { message: "Failed to update school" });
     });
+  });
 
 }
