@@ -25,8 +25,9 @@ export function deleteSchool(id, callbackFn) {
 export function createSchool(schoolObj, callbackFn) {
     const connection = getConnection();
     connection.connect();
-
-    connection.query(`INSERT INTO SCHOOL VALUES (${schoolObj.id}, '${schoolObj.name}', ${schoolObj.addressId})`, (error, result, fields) => {
+    console.log(schoolObj)
+    connection.query(`INSERT INTO SCHOOL(NAME, ADDRESSID) VALUES ('${schoolObj.name}', ${schoolObj.addressId})`, (error, result, fields) => {
+        console.log(result, error)
         connection.end();
         if (error) callbackFn(null)
         callbackFn(result.affectedRows > 0)
