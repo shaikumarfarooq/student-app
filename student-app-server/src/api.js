@@ -1,7 +1,7 @@
 import { app } from "../index.js";
 import bodyParser from "body-parser";
-import { createSchool, deleteSchool, getSchool, updateSchool } from "./db/school.js";
-import { createAddress, getAddressByParams } from "./db/address.js";
+import getSchools, { createSchool, deleteSchool, getSchool, updateSchool } from "./db/school.js";
+import { createAddress, getAddressByParams, updateAddress } from "./db/address.js";
 
 export default function registerAPI() {
 
@@ -33,27 +33,41 @@ export default function registerAPI() {
 
     getAddressByParams(body.address, (address) => {
       if (!address) {
-        createAddress({...body.address, isSchoolAddr: true}, (addr)=> {
+        createAddress({ ...body.address, isSchoolAddr: true }, (addr) => {
           console.log(addr)
-          createSchool({name: body.name, addressId: addr.ADDRESSID}, (result) => {
+          createSchool({ name: body.name, addressId: addr.ADDRESSID }, (result) => {
             res.send(result ? { message: "school created successfully" } : { message: "Failed to create school" });
-          });  
+          });
         })
       } else {
-        createSchool({name: body.name, addressId: address.ADDRESSID}, (result) => {
+        createSchool({ name: body.name, addressId: address.ADDRESSID }, (result) => {
           res.send(result ? { message: "school created successfully" } : { message: "Failed to create school" });
         });
       }
     });
-
-    
   });
 
   // update school details
-  app.put("/school/update", (req, res) => {
+  app.put('/school/update', (req, res) => {
     const body = req.body;
-    updateSchool(body, (result) => {
-      res.send(result ? { message: "school updated successfully" } : { message: "Failed to update school" });
+    console.log(body)
+    updateSchool({ id: body.id, name: body.name }, (school) => {
+      console.log(school)
+      if (body.address) {
+        updateAddress({ ...body.address, addressid: school.ADDRESSID }, (result) => {
+          console.log(result)
+          res.send(result ? { message: "school updated successfully" } : { message: "Failed to update School" })
+        })
+      } else {
+        res.send({ message: "school updated successfully" })
+      }
     });
   });
+
+  app.get("/school/get-all", (req, res) => {
+    getSchools((schools) => {
+      res.send(schools)
+    });
+  });
+
 }

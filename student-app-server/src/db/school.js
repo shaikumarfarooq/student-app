@@ -7,7 +7,7 @@ export function getSchool(id, callbackFn) {
     connection.query(`SELECT * FROM SCHOOL WHERE ID=${id}`, function (error, results, fields) {
         if (error) throw error;
         connection.end();
-        callbackFn(results[0] ? results[0] : {message: "School not found"});
+        callbackFn(results[0] ? results[0] : { message: "School not found" });
     });
 }
 
@@ -34,13 +34,26 @@ export function createSchool(schoolObj, callbackFn) {
     });
 }
 
-export function updateSchool(schoolObj, callbackFn) {
+export function updateSchool(schObj, callbackFn) {
+    const connection = getConnection();
+    connection.connect()
+    connection.query(`update school set name='${schObj.name}' where id=${schObj.id}`, (error, result, field) => {
+        if (error) throw error
+        connection.end();
+        getSchool(schObj.id, (school) => {
+            callbackFn(school)
+        })
+    });
+}
+
+export default function getSchools(callbackFn) {
+
     const connection = getConnection();
     connection.connect();
 
-    connection.query(`UPDATE SCHOOL SET NAME='${schoolObj.name}', ADDRESSID=${schoolObj.addressId} WHERE ID=${schoolObj.id}`, (error, result, fields) => {
+    connection.query(`SELECT * FROM SCHOOL S, ADDRESS  A WHERE S.ADDRESSID = A.ADDRESSID`, (error, result, fields) => {
+        if (error) throw error;
         connection.end();
-        if (error) callbackFn(null)
-        callbackFn(result.affectedRows > 0)
+        callbackFn(error ? [] : result);
     });
 }
