@@ -18,6 +18,11 @@ export default function registerAPI() {
   // delete school details by id  
   app.delete("/school/delete/:id", (req, res) => {
     const id = req.params.id;
+
+    // Get School Details (Callback function delete school)
+    // Delete address in delete school's callback function
+    // Return response(res.send) in delete address's callback function
+
     deleteSchool(id, (result) => {
       res.send(result ? { message: "school deleted successfully" } : { message: "Failed to delete school" });
     });
@@ -66,7 +71,10 @@ export default function registerAPI() {
 
   app.get("/school/get-all", (req, res) => {
     getSchools((schools) => {
-      res.send(schools)
+      const resutls = schools.map(name => {
+        return { id: name.ID, name: name.NAME, address: { addressId: name.ADDRESSID, houseNo: name.ADDRESS, street: name.STREET, town: name.TOWN, district: name.TOWN, state: name.STATE, country: name.COUNTRY, is_address: name.IS_SCHOOL_ADDR } }
+      })
+      res.send(resutls)
     });
   });
 

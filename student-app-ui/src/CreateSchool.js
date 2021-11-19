@@ -103,7 +103,6 @@ export default function CreateSchool() {
         <div>
             <div className="container">
                 <div className="sub-container">
-
                     <div className="registration_form">
                         <h1 className="header">Create your school</h1>
                         <form autoComplete="off">
