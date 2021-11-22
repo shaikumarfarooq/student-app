@@ -39,6 +39,17 @@ export function createAddress(address, callbackFn) {
     });
 }
 
+export function deleteAddress(id, callbackFn) {
+    const connection = getConnection();
+    connection.connect();
+
+    connection.query(`DELETE FROM ADDRESS WHERE ADDRESSID=${id}`, function (error, result, fields) {
+        if (error) throw error;
+        connection.end();
+        callbackFn(result.affectedRows > 0 ? true : false);
+    });
+}
+
 export function updateAddress(address, callbackFn) {
     const connection = getConnection()
     connection.connect()

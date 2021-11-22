@@ -65,6 +65,7 @@ export default function DisplaySchools() {
                         schools.map((data, index) => {
                             return (
                                 <tr key={index} className="rows">
+
                                     <td>{data.name}</td>
                                     <td>{data.address.houseNo}</td>
                                     <td>{data.address.street}</td>

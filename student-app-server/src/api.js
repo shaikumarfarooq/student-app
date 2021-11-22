@@ -1,7 +1,7 @@
 import { app } from "../index.js";
 import bodyParser from "body-parser";
 import getSchools, { createSchool, deleteSchool, getSchool, updateSchool } from "./db/school.js";
-import { createAddress, getAddressByParams, updateAddress } from "./db/address.js";
+import { createAddress, deleteAddress, getAddressByParams, updateAddress } from "./db/address.js";
 
 export default function registerAPI() {
 
@@ -18,14 +18,25 @@ export default function registerAPI() {
   // delete school details by id  
   app.delete("/school/delete/:id", (req, res) => {
     const id = req.params.id;
-
     // Get School Details (Callback function delete school)
     // Delete address in delete school's callback function
     // Return response(res.send) in delete address's callback function
 
-    deleteSchool(id, (result) => {
-      res.send(result ? { message: "school deleted successfully" } : { message: "Failed to delete school" });
-    });
+    getSchool(id, (school)=> {
+      if(!school){
+        res.send({ message: "Failed to delete School" });
+      } else {
+        deleteSchool(id, (result)=> {
+          if(result){
+            deleteAddress(school.ADDRESSID, (addrResult)=> {
+              res.send(addrResult ? { message: "School deleted successfully" } : { message: "Failed to delete School" });
+            })
+          } else {
+            res.send({ message: "Failed to delete School" });
+          }
+        })      
+      }
+    });          
   });
 
   // create school details
@@ -72,7 +83,7 @@ export default function registerAPI() {
   app.get("/school/get-all", (req, res) => {
     getSchools((schools) => {
       const resutls = schools.map(name => {
-        return { id: name.ID, name: name.NAME, address: { addressId: name.ADDRESSID, houseNo: name.ADDRESS, street: name.STREET, town: name.TOWN, district: name.TOWN, state: name.STATE, country: name.COUNTRY, is_address: name.IS_SCHOOL_ADDR } }
+        return { id: name.ID, name: name.NAME, address: { addressId: name.ADDRESSID, houseNo: name.HOUSENO, street: name.STREET, town: name.TOWN, district: name.TOWN, state: name.STATE, country: name.COUNTRY, is_address: name.IS_SCHOOL_ADDR } }
       })
       res.send(resutls)
     });

@@ -7,7 +7,7 @@ export function getSchool(id, callbackFn) {
     connection.query(`SELECT * FROM SCHOOL WHERE ID=${id}`, function (error, results, fields) {
         if (error) throw error;
         connection.end();
-        callbackFn(results[0] ? results[0] : { message: "School not found" });
+        callbackFn(results[0] ? results[0] : null);
     });
 }
 
