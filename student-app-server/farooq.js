@@ -7,7 +7,7 @@ export default function Api(){
 app.get("/school/get-all",(req,res)=>{
     getSchools((school)=>{
         const resutls = school.map(name=>{
-            return {name:name.NAME,address:{addressId:name.ADDRESSID ,houseNo:name.ADDRESS,street:name.STREET,town:name.TOWN ,district:name.TOWN ,state:name.STATE,country:name.COUNTRY ,is_address:name.IS_SCHOOL_ADDR  }}
+            return {name:name.NAME,address:{addressId:name.ADDRESSID ,houseNo:name.HOUSENO,street:name.STREET,town:name.TOWN ,district:name.DISTRICT ,state:name.STATE,country:name.COUNTRY ,is_address:name.IS_SCHOOL_ADDR  }}
         })
         res.send(resutls)
     });
